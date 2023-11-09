@@ -1,0 +1,7 @@
+###
+POST localhost:8080/example
+Content-Type: application/json
+
+{
+
+}

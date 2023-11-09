@@ -1,9 +1,11 @@
-from fastapi import FastAPI, Request, HTTPException, status, Response
+from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Annotated
-from fastapi import Cookie
+import starlette.status as status
+import uuid
 
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -14,19 +16,9 @@ app.add_middleware(
 )
 
 
-@app.get("/cookie")
-def root(response: Response):
-    response.set_cookie(
-        key="fakesession",
-        value="fake-cookie-session-value",
-        domain="localhost"
-    )
-    return {"message": "Come to the dark side, we have cookies"}
-
-
-@app.get("/cookie-test")
-def root(fakesession: Annotated[str | None, Cookie()] = None):
-    print(fakesession)
-    return {"message": "done"}
-
+@app.post("/redirect")
+async def root(d: dict):
+    print('d', d)
+    token = '-'.join([str(uuid.uuid4()) for i in range(10)])
+    return {"token": token}
 
